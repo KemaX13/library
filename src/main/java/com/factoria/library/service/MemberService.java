@@ -2,18 +2,16 @@ package com.factoria.library.service;
 
 import com.factoria.library.model.Member;
 import com.factoria.library.repository.MemberRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
-
-    public MemberService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
 
     public List<Member> getAll() {
         return memberRepository.findAll();

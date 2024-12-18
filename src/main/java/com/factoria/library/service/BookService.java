@@ -1,23 +1,22 @@
 package com.factoria.library.service;
 
+import com.factoria.library.dto.BookDTO;
 import com.factoria.library.model.Book;
 import com.factoria.library.model.Member;
 import com.factoria.library.repository.BookRepository;
 import com.factoria.library.repository.MemberRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class BookService {
     private final BookRepository bookRepository;
-    private final MemberRepository memberRepository;
-
-    public BookService(BookRepository bookRepository, MemberRepository memberRepository) {
-        this.bookRepository = bookRepository;
-        this.memberRepository = memberRepository;
-    }
+        private final MemberRepository memberRepository;
 
     //CRUD
     public Book addBook(Book newBook) {
@@ -34,8 +33,9 @@ public class BookService {
         throw new RuntimeException("Member not found");
     }
 
-    public List<Book> getAll() {
-        return bookRepository.findAll();
+    public List<BookDTO> getAll() {
+        List<Book> books = bookRepository.findAll();
+        return books.stream().map(BookDTO::fromBook).collect(Collectors.toList());
     }
 
     public Book updateBook(long id, Book updatedBook) {
@@ -73,7 +73,8 @@ public class BookService {
         return bookRepository.findByAuthors(author);
     }
 
-    public List<Book> findBookByGenre(String genre) {
-        return bookRepository.findByGenres(genre);
+    public List<BookDTO> findBookByGenre(String genre) {
+        List<Book> books = bookRepository.findByGenres(genre);
+        return books.stream().map(BookDTO::fromBook).collect(Collectors.toList());
     }
 }

@@ -1,7 +1,9 @@
 package com.factoria.library.controller;
 
+import com.factoria.library.exception.ObjectNotFoundException;
 import com.factoria.library.model.Member;
 import com.factoria.library.service.MemberService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,13 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 @RestController
 public class MemberController {
     private final MemberService memberService;
-
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
-    }
 
     //CRUD
     @PostMapping("/members")
@@ -53,7 +52,8 @@ public class MemberController {
     public ResponseEntity<Member> findMemberById(@PathVariable long id) {
         Optional<Member> foundMember = memberService.findMemberById(id);
 
-        return foundMember.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if (foundMember.isPresent()) return new ResponseEntity<>(foundMember.get(), HttpStatus.FOUND);
+        throw new ObjectNotFoundException("Member",  id);
     }
 
     @GetMapping("/members/name/{name}")

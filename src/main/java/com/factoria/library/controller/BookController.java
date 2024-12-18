@@ -1,7 +1,10 @@
 package com.factoria.library.controller;
 
+import com.factoria.library.dto.BookDTO;
+import com.factoria.library.exception.ObjectNotFoundException;
 import com.factoria.library.model.Book;
 import com.factoria.library.service.BookService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,17 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 @RestController
 public class BookController {
     private final BookService bookService;
 
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
-    }
-
     //CRUD
-     @PostMapping("/books")
-     public ResponseEntity<Book> createBook(@RequestBody Book newBook) {
+    @PostMapping("/books")
+    public ResponseEntity<Book> createBook(@RequestBody Book newBook) {
          try {
              Book createdBook = bookService.addBook(newBook);
              return new ResponseEntity<>(createdBook, HttpStatus.CREATED);
@@ -29,7 +29,7 @@ public class BookController {
      }
 
     @GetMapping("/books")
-    public List<Book> getAllBooks() {
+    public List<BookDTO> getAllBooks() {
         return bookService.getAll();
     }
 
@@ -53,7 +53,8 @@ public class BookController {
     public ResponseEntity<Book> findBookById(@PathVariable long id) {
         Optional<Book> foundBook = bookService.findBookById(id);
 
-        return foundBook.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if (foundBook.isPresent()) return new ResponseEntity<>(foundBook.get(), HttpStatus.FOUND);
+        throw new ObjectNotFoundException("Book",  id);
     }
 
     @GetMapping("/books/title/{title}")
@@ -67,7 +68,7 @@ public class BookController {
     }
 
     @GetMapping("/books/genre/{genre}")
-    public List<Book> findBookByGenre(@PathVariable String genre) {
+    public List<BookDTO> findBookByGenre(@PathVariable String genre) {
         return bookService.findBookByGenre(genre);
     } 
 }
