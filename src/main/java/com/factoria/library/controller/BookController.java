@@ -18,7 +18,8 @@ public class BookController {
     private final BookService bookService;
 
     //CRUD
-    @PostMapping("/books")
+    //Create
+    @PostMapping("/api/books")
     public ResponseEntity<Book> createBook(@RequestBody Book newBook) {
          try {
              Book createdBook = bookService.addBook(newBook);
@@ -28,12 +29,14 @@ public class BookController {
          }
      }
 
-    @GetMapping("/books")
+    //Read
+    @GetMapping("/api/books")
     public List<BookDTO> getAllBooks() {
         return bookService.getAll();
     }
 
-    @PutMapping("/books/id/{id}")
+    //Update
+    @PutMapping("/api/books/id={id}")
     public ResponseEntity<Book> updateBook(@PathVariable long id, @RequestBody Book updatedBook) {
         try {
             Book book = bookService.updateBook(id, updatedBook);
@@ -43,31 +46,34 @@ public class BookController {
         }
     }
 
-    @DeleteMapping("/books/id/{id}")
+    //Delete
+    @DeleteMapping("/api/books/id={id}")
     public void deleteBook(@PathVariable long id) {
         bookService.deleteBook(id);
     }
 
     //Filter
-    @GetMapping("/books/id/{id}")
+    //Find by id
+    @GetMapping("/api/books/id={id}")
     public ResponseEntity<Book> findBookById(@PathVariable long id) {
         Optional<Book> foundBook = bookService.findBookById(id);
 
         if (foundBook.isPresent()) return new ResponseEntity<>(foundBook.get(), HttpStatus.FOUND);
-        throw new ObjectNotFoundException("Book",  id);
+        throw new ObjectNotFoundException("Book", id);
     }
 
-    @GetMapping("/books/title/{title}")
+    //Find by title
+    @GetMapping("/api/books/title={title}")
     public List<Book> findBookByTitle(@PathVariable String title) {
         return bookService.findBookByTitle(title);
     }
 
-    @GetMapping("/books/author/{author}")
+    @GetMapping("/api/books/author={author}")
     public List<Book> findBookByAuthor(@PathVariable String author) {
         return bookService.findBookByAuthor(author);
     }
 
-    @GetMapping("/books/genre/{genre}")
+    @GetMapping("/api/books/genre={genre}")
     public List<BookDTO> findBookByGenre(@PathVariable String genre) {
         return bookService.findBookByGenre(genre);
     } 

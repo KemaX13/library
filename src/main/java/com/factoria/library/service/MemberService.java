@@ -13,22 +13,18 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
 
-    public List<Member> getAll() {
-        return memberRepository.findAll();
-    }
-
+    //CRUD
+    //Create
     public Member addMember(Member newMember) {
         return memberRepository.save(newMember);
     }
 
-    public void deleteMember(long id) {
-        memberRepository.deleteById(id);
+    //Read
+    public List<Member> getAll() {
+        return memberRepository.findAll();
     }
 
-    public Optional<Member> findMemberById(long id) {
-        return memberRepository.findById(id);
-    }
-
+    //Update
     public Member updateMember(long id, Member updatedMember) {
         Optional<Member> foundMember = memberRepository.findById(id);
 
@@ -42,6 +38,18 @@ public class MemberService {
         throw new RuntimeException("Member not found with id: " + id);
     }
 
+    //Delete
+    public void deleteMember(long id) {
+        memberRepository.deleteById(id);
+    }
+
+    //Filter
+    //Find by id
+    public Optional<Member> findMemberById(long id) {
+        return memberRepository.findById(id);
+    }
+
+    //Find by name
     public List<Member> findMemberByName(String name) {
         return memberRepository.findMemberByName(name);
     }

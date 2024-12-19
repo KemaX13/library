@@ -22,4 +22,4 @@ public class Member {
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Book> borrowedBooks = new ArrayList<>();
- }
+}

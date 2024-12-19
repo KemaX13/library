@@ -36,6 +36,5 @@ public class Book {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("members")
     private Member member;
 }
